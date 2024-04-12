@@ -73,4 +73,24 @@ public class AutoExec extends Module {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AutoExec autoExec)) return false;
+        if (!super.equals(o)) return false;
+
+        return delay.equals(autoExec.delay) && commandDelay.equals(autoExec.commandDelay) && counter.equals(autoExec.counter) && commands.equals(autoExec.commands);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + delay.hashCode();
+        result = 31 * result + commandDelay.hashCode();
+        result = 31 * result + counter.hashCode();
+        result = 31 * result + commands.hashCode();
+        return result;
+    }
+
 }
