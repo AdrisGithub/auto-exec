@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "auto-exec",
+  "version": "${version}",
+  "name": "auto-exec",
+  "description": "Addon that rolls trades on villagers.",
+  "authors": [
+    "Wzrd"
+  ],
+  "contact": {
+    "repo": ""
+  },
+  "icon": "assets/template/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "meteor": [
+      "de.wzrd.AutoExecutor"
+    ]
+  },
+  "custom": {
+    "meteor-client:color": "0,255,0"
+  },
+  "depends": {
+    "java": ">=17",
+    "minecraft": "${minecraft_version}",
+    "meteor-client": ">0.4.5"
+  }
+}
