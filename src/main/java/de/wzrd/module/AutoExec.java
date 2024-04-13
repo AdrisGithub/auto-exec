@@ -9,7 +9,6 @@ import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.orbit.EventHandler;
 
 import java.util.List;
-import java.util.Objects;
 
 public class AutoExec extends Module {
 
@@ -25,11 +24,11 @@ public class AutoExec extends Module {
     );
 
     private final Setting<Integer> commandDelay = settings.getDefaultGroup().add(new IntSetting.Builder()
-        .min(10)
+        .min(0)
         .max(10000)
         .defaultValue(1000)
         .sliderMax(10000)
-        .sliderMin(10)
+        .sliderMin(0)
         .name("individual Delay")
         .description("Delay between individual Commands")
         .build()
@@ -49,7 +48,7 @@ public class AutoExec extends Module {
 
     @EventHandler
     private void onTick(TickEvent.Pre event) {
-        if (!Objects.equals(delay.get(), counter)) {
+        if (delay.get() >= counter) {
             counter++;
             return;
         }
@@ -58,12 +57,18 @@ public class AutoExec extends Module {
             return;
         }
         for (final String command : commands.get()) {
-            if (command.charAt(0) != '/') {
-                sleep();
-                mc.player.networkHandler.sendChatCommand(command);
-            }
+            sendCommand(command);
+            sleep();
         }
 
+    }
+
+    private void sendCommand(String command) {
+        try{
+            mc.player.networkHandler.sendChatCommand(command.charAt(0) == '/' ? command.substring(1) : command);
+        }catch (IndexOutOfBoundsException index){
+            // Just ignore this
+        }
     }
 
     private void sleep() {
@@ -72,25 +77,6 @@ public class AutoExec extends Module {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AutoExec autoExec)) return false;
-        if (!super.equals(o)) return false;
-
-        return delay.equals(autoExec.delay) && commandDelay.equals(autoExec.commandDelay) && counter.equals(autoExec.counter) && commands.equals(autoExec.commands);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + delay.hashCode();
-        result = 31 * result + commandDelay.hashCode();
-        result = 31 * result + counter.hashCode();
-        result = 31 * result + commands.hashCode();
-        return result;
     }
 
 }
